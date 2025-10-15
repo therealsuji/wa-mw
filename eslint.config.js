@@ -1,3 +1,5 @@
+import pluginQuery from "@tanstack/eslint-plugin-query";
+
 import { FlatCompat } from "@eslint/eslintrc";
 import tseslint from "typescript-eslint";
 
@@ -16,6 +18,7 @@ export default tseslint.config(
       ...tseslint.configs.recommended,
       ...tseslint.configs.recommendedTypeChecked,
       ...tseslint.configs.stylisticTypeChecked,
+      ...pluginQuery.configs["flat/recommended"],
     ],
     rules: {
       "@typescript-eslint/array-type": "off",
@@ -44,5 +47,5 @@ export default tseslint.config(
         projectService: true,
       },
     },
-  },
+  }
 );
