@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { ProductCard } from "@/components/product-card";
+import { ProductCard } from "@/components/molecules/product-card";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/lib/assets";
 

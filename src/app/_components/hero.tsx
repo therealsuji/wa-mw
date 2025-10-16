@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Icons, Images } from "@/lib/assets";
 
-import { Separator } from "./ui/separator";
+import { Separator } from "../../components/ui/separator";
 
 export const Hero = () => {
   return (
