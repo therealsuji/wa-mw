@@ -1,5 +1,3 @@
-"use client";
-
 import { Categories } from "@/app/_components/categories";
 import { FlashSale } from "@/app/_components/flash-sale";
 import { Hero } from "@/app/_components/hero";

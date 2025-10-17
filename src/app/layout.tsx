@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 
 import { type Metadata } from "next";
+import { Toaster } from "sonner";
 
 import { Footer } from "@/components/organisms/footer";
 import { Header } from "@/components/organisms/header";
@@ -29,6 +30,7 @@ export default function RootLayout({
           <main className="bg-background">{children}</main>
           <Footer />
         </QueryProvider>
+        <Toaster />
       </body>
     </html>
   );
