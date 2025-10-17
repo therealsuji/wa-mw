@@ -20,7 +20,7 @@ export const Categories = () => {
         </div>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
           <Link
-            href="/shop?category=new-arrivals"
+            href="/shop"
             className="relative block h-[34rem] overflow-hidden rounded-lg lg:col-span-2"
           >
             <Images.newArrivals className="object-cover" />

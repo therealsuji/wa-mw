@@ -1,16 +1,7 @@
 "use client";
 
 import { ProductCard } from "@/components/molecules/product-card";
-
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  rating: number;
-  description: string;
-  imageUrl: string;
-  category: string[];
-}
+import { type Product } from "@/lib/api/schemas";
 
 interface ProductGridProps {
   products: Product[];
@@ -24,9 +15,9 @@ export const ProductGrid = ({ products }: ProductGridProps) => {
           key={product.id}
           title={product.title}
           price={product.price}
-          rating={product.rating}
+          rating={product.rating.rate}
           description={product.description}
-          imageUrl={product.imageUrl}
+          imageUrl={product.image}
         />
       ))}
     </div>

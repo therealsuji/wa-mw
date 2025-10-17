@@ -11,36 +11,47 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface ShopHeaderProps {
+  sortBy: string;
   onSortChange: (sort: string) => void;
 }
 
-export const ShopHeader = ({ onSortChange }: ShopHeaderProps) => {
+const getSortLabel = (sort: string): string => {
+  const sortLabels: Record<string, string> = {
+    "price-asc": "Price: Low to High",
+    "price-desc": "Price: High to Low",
+    "rating-desc": "Highest Rated",
+    "name-asc": "Name: A to Z",
+  };
+
+  return sortLabels[sort] ?? "Sort";
+};
+
+export const ShopHeader = ({ sortBy, onSortChange }: ShopHeaderProps) => {
   return (
     <div className="flex items-center justify-between">
       <h1 className="text-3xl font-bold">Shop</h1>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="gap-2">
-            Sort
+            {getSortLabel(sortBy)}
             <ChevronDown className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => onSortChange("price-asc")}>
-            Price: Low to High
+            {getSortLabel("price-asc")}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => onSortChange("price-desc")}>
-            Price: High to Low
+            {getSortLabel("price-desc")}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => onSortChange("rating-desc")}>
-            Highest Rated
+            {getSortLabel("rating-desc")}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => onSortChange("name-asc")}>
-            Name: A to Z
+            {getSortLabel("name-asc")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
   );
 };
-

@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
+import { SkeletonProductCard } from "@/components/molecules/skeleton-product-card";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,116 +14,41 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import { useProducts } from "@/lib/hooks/use-products";
 
 import { CategoryFilter } from "./_components/category-filter";
+import { PaginationComponent } from "./_components/pagination";
 import { ProductGrid } from "./_components/product-grid";
 import { ShopHeader } from "./_components/shop-header";
 
-const allProducts = [
-  {
-    id: 1,
-    title: "Urban Slim-Fit Shirt",
-    price: 65.0,
-    rating: 4.5,
-    description:
-      "Crisp, breathable cotton crafted into a modern slim-fit silhouette for a sharp...",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    category: ["new-arrivals", "men"],
-  },
-  {
-    id: 2,
-    title: "Classic Cotton Shorts",
-    price: 95.0,
-    rating: 4.5,
-    description:
-      "Lightweight cotton shorts with a tailored fit, perfect for casual days",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    category: ["new-arrivals", "men"],
-  },
-  {
-    id: 3,
-    title: "Oversized Hoodie",
-    price: 59.0,
-    rating: 4.5,
-    description: "Premium fleece hoodie with a relaxed, comfort and cozy fit.",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    category: ["new-arrivals", "unisex"],
-  },
-  {
-    id: 4,
-    title: "Sleeveless Blouse",
-    price: 40.0,
-    rating: 3.0,
-    description:
-      "A lightweight, breathable blouse designed for effortless style on warm days. Crafted...",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    category: ["new-arrivals", "women"],
-  },
-  {
-    id: 5,
-    title: "Women's Cargo Pant",
-    price: 59.0,
-    rating: 4.5,
-    description:
-      "Utility-inspired with multiple pockets and a relaxed straight fit.",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    category: ["new-arrivals", "women"],
-  },
-  {
-    id: 6,
-    title: "Women's Jean Jacket",
-    price: 65.0,
-    rating: 4.5,
-    description: "Classic denim with a cropped cut for a modern twist.",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    category: ["new-arrivals", "women"],
-  },
-  {
-    id: 7,
-    title: "Men's Cotton Jacket",
-    price: 95.0,
-    rating: 4.5,
-    description:
-      "A timeless layering essential made from durable yet lightweight cotton. This...",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    category: ["new-arrivals", "men"],
-  },
-  {
-    id: 8,
-    title: "Strap Top Blouse",
-    price: 40.0,
-    rating: 4.5,
-    description:
-      "Soft satin straps with a relaxed fit, ideal for layering or wearing solo.",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    category: ["new-arrivals", "women"],
-  },
-  {
-    id: 9,
-    title: "Urban Slim-Fit Shirt",
-    price: 65.0,
-    rating: 4.5,
-    description:
-      "Crisp, breathable cotton crafted into a modern slim-fit silhouette for a sharp...",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    category: ["new-arrivals", "men"],
-  },
-];
+const mapUrlCategoryToApi = (urlCategory: string): string => {
+  const categoryMap: Record<string, string> = {
+    men: "men's clothing",
+    women: "women's clothing",
+  };
+
+  return categoryMap[urlCategory] ?? urlCategory;
+};
 
 export default function ShopPage() {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([
-    "new-arrivals",
-  ]);
+  const searchParams = useSearchParams();
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<string>("name-asc");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 9;
+
+  const { data: products, isLoading, error } = useProducts();
+
+  // Filter products if url has category param
+  useEffect(() => {
+    const categoryParam = searchParams.get("category");
+    if (categoryParam) {
+      const apiCategory = mapUrlCategoryToApi(categoryParam);
+      setSelectedCategories([apiCategory]);
+    } else {
+      setSelectedCategories([]);
+    }
+  }, [searchParams]);
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategories((prev) =>
@@ -136,25 +63,84 @@ export default function ShopPage() {
   };
 
   // Filter products based on selected categories
-  const filteredProducts = allProducts.filter((product) =>
-    selectedCategories.some((cat) => product.category.includes(cat))
-  );
+  const filteredProducts = useMemo(() => {
+    if (!products) return [];
+
+    // If no categories are selected, show all products
+    if (selectedCategories.length === 0) {
+      return products;
+    }
+
+    return products.filter((product) =>
+      selectedCategories.includes(product.category)
+    );
+  }, [products, selectedCategories]);
 
   // Sort products
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    switch (sortBy) {
-      case "price-asc":
-        return a.price - b.price;
-      case "price-desc":
-        return b.price - a.price;
-      case "rating-desc":
-        return b.rating - a.rating;
-      case "name-asc":
-        return a.title.localeCompare(b.title);
-      default:
-        return 0;
-    }
-  });
+  const sortedProducts = useMemo(() => {
+    return [...filteredProducts].sort((a, b) => {
+      switch (sortBy) {
+        case "price-asc":
+          return a.price - b.price;
+        case "price-desc":
+          return b.price - a.price;
+        case "rating-desc":
+          return b.rating.rate - a.rating.rate;
+        case "name-asc":
+          return a.title.localeCompare(b.title);
+        default:
+          return 0;
+      }
+    });
+  }, [filteredProducts, sortBy]);
+
+  // Pagination logic
+  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedProducts = sortedProducts.slice(startIndex, endIndex);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategories, sortBy]);
+
+  if (isLoading) {
+    return (
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <div className="mb-8 h-6 w-48 animate-pulse rounded bg-gray-200" />
+        <div className="mb-8 h-12 w-full animate-pulse rounded bg-gray-200" />
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[250px_1fr]">
+          <aside>
+            <div className="space-y-4">
+              <div className="h-6 w-32 animate-pulse rounded bg-gray-200" />
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-4 w-24 animate-pulse rounded bg-gray-200"
+                />
+              ))}
+            </div>
+          </aside>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <SkeletonProductCard key={index} />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <div className="text-center text-red-600">
+          Failed to load products. Please try again later.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
@@ -175,7 +161,7 @@ export default function ShopPage() {
 
       {/* Shop Header */}
       <div className="mb-8">
-        <ShopHeader onSortChange={handleSortChange} />
+        <ShopHeader sortBy={sortBy} onSortChange={handleSortChange} />
       </div>
 
       {/* Main Content */}
@@ -190,33 +176,14 @@ export default function ShopPage() {
 
         {/* Product Grid */}
         <div className="space-y-8">
-          <ProductGrid products={sortedProducts} />
+          <ProductGrid products={paginatedProducts} />
 
           {/* Pagination */}
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive>
-                  1
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">2</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+          <PaginationComponent
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       </div>
     </div>

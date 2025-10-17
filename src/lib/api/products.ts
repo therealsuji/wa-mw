@@ -30,3 +30,8 @@ export async function getAllProducts(
   return validated;
 }
 
+export async function getCategories(): Promise<string[]> {
+  const data = await get<string[]>("/products/categories");
+  return data;
+}
+
