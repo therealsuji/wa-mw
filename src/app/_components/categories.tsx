@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Icons, Images } from "@/lib/assets";
-import { CATEGORY_MAPPINGS, mapApiCategoryToUrl } from "@/lib/api/categories";
+import { CATEGORY_MAPPINGS } from "@/lib/api/categories";
 
 export const Categories = () => {
   return (

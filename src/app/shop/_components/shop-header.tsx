@@ -17,9 +17,11 @@ interface ShopHeaderProps {
 
 const getSortLabel = (sort: string): string => {
   const sortLabels: Record<string, string> = {
+    "most-popular": "Most Popular",
+    "best-rating": "Best Rating",
+    "recent": "Recent",
     "price-asc": "Price: Low to High",
     "price-desc": "Price: High to Low",
-    "rating-desc": "Highest Rated",
     "name-asc": "Name: A to Z",
   };
 
@@ -38,17 +40,20 @@ export const ShopHeader = ({ sortBy, onSortChange }: ShopHeaderProps) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => onSortChange("most-popular")}>
+            {getSortLabel("most-popular")}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => onSortChange("best-rating")}>
+            {getSortLabel("best-rating")}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => onSortChange("recent")}>
+            {getSortLabel("recent")}
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => onSortChange("price-asc")}>
             {getSortLabel("price-asc")}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => onSortChange("price-desc")}>
             {getSortLabel("price-desc")}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onSortChange("rating-desc")}>
-            {getSortLabel("rating-desc")}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onSortChange("name-asc")}>
-            {getSortLabel("name-asc")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

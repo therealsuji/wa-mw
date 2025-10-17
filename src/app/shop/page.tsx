@@ -25,7 +25,7 @@ import { ShopHeader } from "./_components/shop-header";
 export default function ShopPage() {
   const searchParams = useSearchParams();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState<string>("name-asc");
+  const [sortBy, setSortBy] = useState<string>("most-popular");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 9;
 
@@ -72,12 +72,18 @@ export default function ShopPage() {
   const sortedProducts = useMemo(() => {
     return [...filteredProducts].sort((a, b) => {
       switch (sortBy) {
+        case "most-popular":
+          // Sort by rating count (more reviews = more popular)
+          return b.rating.count - a.rating.count;
+        case "best-rating":
+          return b.rating.rate - a.rating.rate;
+        case "recent":
+          // Sort by ID (higher ID = more recent, assuming IDs are sequential)
+          return b.id - a.id;
         case "price-asc":
           return a.price - b.price;
         case "price-desc":
           return b.price - a.price;
-        case "rating-desc":
-          return b.rating.rate - a.rating.rate;
         case "name-asc":
           return a.title.localeCompare(b.title);
         default:
