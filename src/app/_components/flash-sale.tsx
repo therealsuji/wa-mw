@@ -43,6 +43,7 @@ export const FlashSale = () => {
           {products?.map((product, index) => (
             <ProductCard
               key={product.id}
+              id={product.id}
               title={product.title}
               price={product.price}
               rating={product.rating.rate}

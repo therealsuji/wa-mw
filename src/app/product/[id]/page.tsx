@@ -247,6 +247,7 @@ export default function ProductDetailsPage({
           {related.map((p) => (
             <ProductCard
               key={p.id}
+              id={p.id}
               title={p.title}
               price={p.price}
               rating={p.rating}

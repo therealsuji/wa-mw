@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -8,6 +9,7 @@ import { Icons } from "@/lib/assets";
 import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
+  id: number;
   title: string;
   price: number;
   rating: number;
@@ -17,6 +19,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({
+  id,
   title,
   price,
   rating,
@@ -32,14 +35,14 @@ export const ProductCard = ({
       )}
     >
       <div className="flex h-full flex-col justify-between">
-        <div className="flex flex-col gap-4">
+        <Link href={`/product/${id}`} className="flex flex-col gap-4">
           <div className="bg-background relative aspect-square h-56 w-full p-6">
             <Image src={imageUrl} alt={title} fill className="object-contain" />
           </div>
           <h3 className="text-primary line-clamp-2 text-base font-semibold">
             {title}
           </h3>
-        </div>
+        </Link>
         <div className="mt-4 flex flex-col gap-4">
           <div>
             <div className="mb-2 flex items-center justify-between">
