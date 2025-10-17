@@ -133,7 +133,7 @@ export default function ProductDetailsPage({
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href={`/shop?category=${mapApiCategoryToUrl(product.category)}`}>
+              <Link className="capitalize" href={`/shop?category=${mapApiCategoryToUrl(product.category)}`}>
                 {product.category}
               </Link>
             </BreadcrumbLink>
