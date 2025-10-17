@@ -2,6 +2,8 @@ import { Inter } from "next/font/google";
 
 import { type Metadata } from "next";
 
+import { Footer } from "@/components/organisms/footer";
+import { Header } from "@/components/organisms/header";
 import { QueryProvider } from "@/lib/query-client";
 import "@/styles/globals.css";
 
@@ -22,7 +24,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable}`}>
       <body>
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <Header />
+          <main className="bg-background">{children}</main>
+          <Footer />
+        </QueryProvider>
       </body>
     </html>
   );
