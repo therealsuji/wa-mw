@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -14,15 +14,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { useProducts } from "@/lib/hooks/use-products";
 import { mapUrlCategoryToApi } from "@/lib/api/categories";
+import { useProducts } from "@/lib/hooks/use-products";
 
 import { CategoryFilter } from "./_components/category-filter";
 import { PaginationComponent } from "./_components/pagination";
 import { ProductGrid } from "./_components/product-grid";
 import { ShopHeader } from "./_components/shop-header";
 
-export default function ShopPage() {
+function ShopPage() {
   const searchParams = useSearchParams();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<string>("most-popular");
@@ -185,5 +185,13 @@ export default function ShopPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ShopPageWrapper() {
+  return (
+    <Suspense>
+      <ShopPage />
+    </Suspense>
   );
 }
