@@ -18,4 +18,7 @@ export const productSchema = z.object({
 export const productsArraySchema = z.array(productSchema);
 
 export type Product = z.infer<typeof productSchema>;
+export type ProductDetails = Product & {
+  images: string[];
+};
 export type Rating = z.infer<typeof ratingSchema>;

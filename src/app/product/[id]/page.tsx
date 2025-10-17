@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -17,85 +17,13 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Icons } from "@/lib/assets";
+import { useProduct, useProducts } from "@/lib/hooks/use-products";
 
-type Product = {
-  id: number;
-  title: string;
-  price: number;
-  rating: number;
-  description: string;
-  imageUrl: string;
-  images: string[];
+const isClothingCategory = (category?: string) => {
+  return category === "men's clothing" || category === "women's clothing";
 };
-
-const PRODUCTS: Product[] = [
-  {
-    id: 1,
-    title: "Urban Slim-Fit Shirt",
-    price: 65,
-    rating: 4.5,
-    description:
-      "Crisp, breathable cotton crafted into a modern slim-fit silhouette for a sharp everyday look.",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    images: Array.from(
-      { length: 4 },
-      () => "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png"
-    ),
-  },
-  {
-    id: 2,
-    title: "Classic Cotton Shorts",
-    price: 95,
-    rating: 4.5,
-    description:
-      "Lightweight cotton shorts with a tailored fit, perfect for casual days.",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    images: Array.from(
-      { length: 4 },
-      () => "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png"
-    ),
-  },
-  {
-    id: 3,
-    title: "Oversized Hoodie",
-    price: 59,
-    rating: 4.5,
-    description:
-      "Premium fleece hoodie with a relaxed fit for unmatched comfort and warmth.",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    images: Array.from(
-      { length: 4 },
-      () => "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png"
-    ),
-  },
-  {
-    id: 4,
-    title: "Sleeveless Blouse",
-    price: 40,
-    rating: 3.0,
-    description:
-      "A lightweight, breathable blouse designed for effortless warm‑weather style.",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    images: Array.from(
-      { length: 4 },
-      () => "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png"
-    ),
-  },
-  {
-    id: 5,
-    title: "Women's Cargo Pant",
-    price: 59,
-    rating: 4.5,
-    description:
-      "Utility‑inspired cargo pants with multiple pockets and a relaxed straight fit.",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    images: Array.from(
-      { length: 4 },
-      () => "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png"
-    ),
-  },
-];
 
 export default function ProductDetailsPage({
   params,
@@ -103,18 +31,63 @@ export default function ProductDetailsPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const product = useMemo(() => {
-    const found = PRODUCTS.find((p) => p.id === Number(id));
-    return (found ?? PRODUCTS[0])!;
-  }, [id]);
+  const { data: product, isLoading, error } = useProduct(Number(id));
+  const { data: products } = useProducts();
 
-  const [selectedImage, setSelectedImage] = useState<string>(
-    product.images[0] ?? product.imageUrl
-  );
+  const [selectedImage, setSelectedImage] = useState<string>("");
+
+  useEffect(() => {
+    if (product?.images?.[0]) {
+      setSelectedImage(product.images[0]);
+    }
+  }, [product?.images]);
   const [size, setSize] = useState<string>("Medium");
   const [qty, setQty] = useState<number>(1);
 
-  const related = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 4);
+  // Hides counter if clothing
+  const isClothing = isClothingCategory(product?.category);
+
+  const related = useMemo(() => {
+    if (!products || !product) return [];
+    return products
+      .filter((p) => p.id !== product.id && p.category === product.category)
+      .slice(0, 4);
+  }, [products, product]);
+
+  if (isLoading) {
+    return (
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <div className="mb-8 h-6 w-48 animate-pulse rounded bg-gray-200" />
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[120px_1fr_1fr]">
+          <div className="order-2 flex gap-4 lg:order-1 lg:flex-col">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-24 w-24 animate-pulse rounded bg-gray-200"
+              />
+            ))}
+          </div>
+          <div className="order-1 h-96 animate-pulse rounded bg-gray-200 lg:order-2" />
+          <div className="order-3 space-y-6 lg:pl-4">
+            <div className="h-8 w-3/4 animate-pulse rounded bg-gray-200" />
+            <div className="h-4 w-1/2 animate-pulse rounded bg-gray-200" />
+            <div className="h-6 w-1/4 animate-pulse rounded bg-gray-200" />
+            <div className="h-20 w-full animate-pulse rounded bg-gray-200" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <div className="text-center text-red-600">
+          Product not found. Please try again later.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
@@ -134,11 +107,11 @@ export default function ProductDetailsPage({
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="#">Men&apos;s Clothing</BreadcrumbLink>
+            <BreadcrumbLink href="#">{product.category}</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Jacket</BreadcrumbPage>
+            <BreadcrumbPage>{product.title}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -149,7 +122,7 @@ export default function ProductDetailsPage({
         <div className="order-2 flex gap-4 lg:order-1 lg:flex-col">
           {product.images.map((src, idx) => (
             <button
-              key={`${src}-${idx}`}
+              key={idx}
               className={`relative aspect-square w-24 overflow-hidden rounded-md border ${
                 selectedImage === src ? "border-primary" : "border-input"
               }`}
@@ -159,7 +132,7 @@ export default function ProductDetailsPage({
                 src={src}
                 alt={product.title}
                 fill
-                className="object-contain p-1"
+                className="object-contain p-2"
               />
             </button>
           ))}
@@ -168,12 +141,16 @@ export default function ProductDetailsPage({
         {/* Main image */}
         <Card className="order-1 flex items-center justify-center overflow-hidden shadow-none lg:order-2">
           <div className="relative aspect-square w-full max-w-xl">
-            <Image
-              src={selectedImage}
-              alt={product.title}
-              fill
-              className="object-contain"
-            />
+            {selectedImage ? (
+              <Image
+                src={selectedImage}
+                alt={product.title}
+                fill
+                className="object-contain p-4"
+              />
+            ) : (
+              <Skeleton className="h-full w-full" />
+            )}
           </div>
         </Card>
 
@@ -184,8 +161,10 @@ export default function ProductDetailsPage({
               {product.title}
             </h1>
             <div className="mt-2 flex items-center gap-2">
-              <Icons.star className="h-4 w-4" />
-              <span className="text-primary text-sm">{product.rating}/5</span>
+              <Icons.star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+              <span className="text-primary text-sm">
+                {product.rating.rate}/5
+              </span>
             </div>
             <div className="text-primary mt-3 text-xl font-bold">
               ${product.price.toFixed(2)}
@@ -196,22 +175,24 @@ export default function ProductDetailsPage({
             </p>
           </div>
 
-          {/* Size */}
-          <div>
-            <p className="text-muted-foreground mb-2 text-xs">Select Size</p>
-            <div className="flex gap-2">
-              {(["Small", "Medium", "Large"] as const).map((s) => (
-                <Button
-                  key={s}
-                  variant={size === s ? "default" : "outline"}
-                  onClick={() => setSize(s)}
-                  className="h-8 px-3"
-                >
-                  {s}
-                </Button>
-              ))}
+          {/* Size - Only show for clothing */}
+          {isClothing && (
+            <div>
+              <p className="text-muted-foreground mb-2 text-xs">Select Size</p>
+              <div className="flex gap-2">
+                {(["Small", "Medium", "Large"] as const).map((s) => (
+                  <Button
+                    key={s}
+                    variant={size === s ? "default" : "outline"}
+                    onClick={() => setSize(s)}
+                    className="h-8 px-3"
+                  >
+                    {s}
+                  </Button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Quantity + Add to cart */}
           <div className="flex items-center gap-3">
@@ -250,9 +231,9 @@ export default function ProductDetailsPage({
               id={p.id}
               title={p.title}
               price={p.price}
-              rating={p.rating}
+              rating={p.rating.rate}
               description={p.description}
-              imageUrl={p.imageUrl}
+              imageUrl={p.image}
             />
           ))}
         </div>

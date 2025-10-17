@@ -1,4 +1,4 @@
-import { productsArraySchema, type Product } from "./schemas";
+import { productSchema, productsArraySchema, type Product, type ProductDetails } from "./schemas";
 import { get } from "./client";
 
 interface GetAllProductsParams {
@@ -28,6 +28,20 @@ export async function getAllProducts(
   const validated = productsArraySchema.parse(data);
 
   return validated;
+}
+
+export async function getProduct(id: number): Promise<ProductDetails> {
+  const data = await get<unknown>(`/products/${id}`);
+  
+  const validated = productSchema.parse(data);
+  
+  // Add images array by duplicating the single image 5 times with unique URLs
+  const productWithImages: ProductDetails = {
+    ...validated,
+    images: Array.from({ length: 5 }, (_, idx) => `${validated.image}#${idx}`),
+  };
+  
+  return productWithImages;
 }
 
 export async function getCategories(): Promise<string[]> {
