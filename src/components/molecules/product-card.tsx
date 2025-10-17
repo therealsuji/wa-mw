@@ -31,18 +31,17 @@ export const ProductCard = ({
         featured ? "border-2 border-black" : "border"
       )}
     >
-      <div className="flex flex-col">
-        {/* Product Image */}
-        <div className="bg-background relative aspect-square h-56 w-full p-6">
-          <Image src={imageUrl} alt={title} fill className="object-contain" />
+      <div className="flex h-full flex-col justify-between">
+        <div className="flex flex-col gap-4">
+          <div className="bg-background relative aspect-square h-56 w-full p-6">
+            <Image src={imageUrl} alt={title} fill className="object-contain" />
+          </div>
+          <h3 className="text-primary line-clamp-2 text-base font-semibold">
+            {title}
+          </h3>
         </div>
-
-        {/* Product Details */}
         <div className="mt-4 flex flex-col gap-4">
           <div>
-            <h3 className="text-primary mb-2 text-base font-semibold">
-              {title}
-            </h3>
             <div className="mb-2 flex items-center justify-between">
               <span className="text-primary text-base">
                 ${price.toFixed(2)}
@@ -58,8 +57,6 @@ export const ProductCard = ({
               {description}
             </p>
           </div>
-
-          {/* Add to Cart Button */}
           <Button
             role="button"
             variant={featured ? "default" : "secondary"}

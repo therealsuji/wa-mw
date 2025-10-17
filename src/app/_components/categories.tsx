@@ -12,7 +12,7 @@ export const Categories = () => {
         <div className="mb-12 flex items-center justify-between">
           <h2 className="text-primary text-3xl font-bold">Shop By Category</h2>
           <Button variant="ghost" asChild>
-            <Link href="/categories" className="flex items-center gap-2">
+            <Link href="/shop" className="flex items-center gap-2">
               Browse All Categories
               <Icons.arrowRight className="h-4 w-4" />
             </Link>
@@ -20,7 +20,7 @@ export const Categories = () => {
         </div>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
           <Link
-            href="/new-arrivals"
+            href="/shop?category=new-arrivals"
             className="relative block h-[34rem] overflow-hidden rounded-lg lg:col-span-2"
           >
             <Images.newArrivals className="object-cover" />
@@ -35,7 +35,7 @@ export const Categories = () => {
           </Link>
           <div className="grid grid-cols-1 gap-6 lg:col-span-2">
             <Link
-              href="/womens"
+              href="/shop?category=women"
               className="relative block h-[16rem] overflow-hidden rounded-lg"
             >
               <Images.womensCategory className="object-cover" />
@@ -52,7 +52,7 @@ export const Categories = () => {
               </div>
             </Link>
             <Link
-              href="/mens"
+              href="/shop?category=men"
               className="relative block h-[16rem] overflow-hidden rounded-lg"
             >
               <Images.mensCategory className="object-cover" />
