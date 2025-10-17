@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Icons, Images } from "@/lib/assets";
+import { CATEGORY_MAPPINGS, mapApiCategoryToUrl } from "@/lib/api/categories";
 
 export const Categories = () => {
   return (
@@ -20,7 +21,7 @@ export const Categories = () => {
         </div>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
           <Link
-            href="/shop"
+            href="shop"
             className="relative block h-[34rem] overflow-hidden rounded-lg lg:col-span-2"
           >
             <Images.newArrivals className="object-cover" />
@@ -35,7 +36,7 @@ export const Categories = () => {
           </Link>
           <div className="grid grid-cols-1 gap-6 lg:col-span-2">
             <Link
-              href="/shop?category=women"
+              href={`/shop?category=${CATEGORY_MAPPINGS["women's clothing"]}`}
               className="relative block h-[16rem] overflow-hidden rounded-lg"
             >
               <Images.womensCategory className="object-cover" />
@@ -52,7 +53,7 @@ export const Categories = () => {
               </div>
             </Link>
             <Link
-              href="/shop?category=men"
+              href={`/shop?category=${CATEGORY_MAPPINGS["men's clothing"]}`}
               className="relative block h-[16rem] overflow-hidden rounded-lg"
             >
               <Images.mensCategory className="object-cover" />

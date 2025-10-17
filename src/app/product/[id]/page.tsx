@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Icons } from "@/lib/assets";
+import { mapApiCategoryToUrl } from "@/lib/api/categories";
 import { useProduct, useRelatedProducts } from "@/lib/hooks/use-products";
 import { useCartStore } from "@/lib/stores/cart-store";
 
@@ -131,7 +132,11 @@ export default function ProductDetailsPage({
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="#">{product.category}</BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <Link href={`/shop?category=${mapApiCategoryToUrl(product.category)}`}>
+                {product.category}
+              </Link>
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

@@ -15,20 +15,12 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useProducts } from "@/lib/hooks/use-products";
+import { mapUrlCategoryToApi } from "@/lib/api/categories";
 
 import { CategoryFilter } from "./_components/category-filter";
 import { PaginationComponent } from "./_components/pagination";
 import { ProductGrid } from "./_components/product-grid";
 import { ShopHeader } from "./_components/shop-header";
-
-const mapUrlCategoryToApi = (urlCategory: string): string => {
-  const categoryMap: Record<string, string> = {
-    men: "men's clothing",
-    women: "women's clothing",
-  };
-
-  return categoryMap[urlCategory] ?? urlCategory;
-};
 
 export default function ShopPage() {
   const searchParams = useSearchParams();
