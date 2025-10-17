@@ -1,9 +1,11 @@
 "use client";
 
-import { use, useEffect, useMemo, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
+
+import { toast } from "sonner";
 
 import { Counter } from "@/components/molecules/counter";
 import { ProductCard } from "@/components/molecules/product-card";
@@ -19,7 +21,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Icons } from "@/lib/assets";
-import { useProduct, useProducts } from "@/lib/hooks/use-products";
+import { useProduct, useRelatedProducts } from "@/lib/hooks/use-products";
+import { useCartStore } from "@/lib/stores/cart-store";
 
 const isClothingCategory = (category?: string) => {
   return category === "men's clothing" || category === "women's clothing";
@@ -32,7 +35,7 @@ export default function ProductDetailsPage({
 }) {
   const { id } = use(params);
   const { data: product, isLoading, error } = useProduct(Number(id));
-  const { data: products } = useProducts();
+  const addItem = useCartStore((state) => state.addItem);
 
   const [selectedImage, setSelectedImage] = useState<string>("");
 
@@ -47,12 +50,33 @@ export default function ProductDetailsPage({
   // Hides counter if clothing
   const isClothing = isClothingCategory(product?.category);
 
-  const related = useMemo(() => {
-    if (!products || !product) return [];
-    return products
-      .filter((p) => p.id !== product.id && p.category === product.category)
-      .slice(0, 4);
-  }, [products, product]);
+  const handleAddToCart = () => {
+    if (!product) return;
+
+    addItem({
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      imageUrl: product.image,
+      category: product.category,
+      size: isClothing ? size : undefined,
+      qty,
+    });
+
+    toast.success("Added to cart!", {
+      description: `${qty} × ${product.title}${isClothing ? ` (${size})` : ""}`,
+    });
+
+    // Reset quantity to 1 after adding
+    setQty(1);
+  };
+
+  // Get related products from the same category, excluding current product
+  const { data: related = [] } = useRelatedProducts({
+    categories: product?.category ?? "",
+    excludeIds: product ? [product.id] : [],
+    limit: 4,
+  });
 
   if (isLoading) {
     return (
@@ -197,7 +221,9 @@ export default function ProductDetailsPage({
           {/* Quantity + Add to cart */}
           <div className="flex items-center gap-3">
             <Counter value={qty} onChange={setQty} min={1} max={99} />
-            <Button className="h-10 px-6">Add to cart</Button>
+            <Button className="h-10 px-6" onClick={handleAddToCart}>
+              Add to cart
+            </Button>
           </div>
         </div>
       </div>
@@ -205,17 +231,8 @@ export default function ProductDetailsPage({
       {/* Description */}
       <section className="mt-12 space-y-4">
         <h2 className="text-xl font-semibold text-black">Description</h2>
-        <p className="text-muted-foreground text-sm">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
-        </p>
-        <p className="text-muted-foreground text-sm">
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia deserunt mollit anim id est
-          laborum.
+        <p className="text-muted-foreground max-w-3xl text-sm">
+          {product.description}
         </p>
       </section>
 
@@ -225,17 +242,24 @@ export default function ProductDetailsPage({
           Related Products
         </h3>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {related.map((p) => (
-            <ProductCard
-              key={p.id}
-              id={p.id}
-              title={p.title}
-              price={p.price}
-              rating={p.rating.rate}
-              description={p.description}
-              imageUrl={p.image}
-            />
-          ))}
+          {related.length > 0 ? (
+            related.map((p) => (
+              <ProductCard
+                key={p.id}
+                id={p.id}
+                title={p.title}
+                price={p.price}
+                rating={p.rating.rate}
+                description={p.description}
+                imageUrl={p.image}
+                category={p.category}
+              />
+            ))
+          ) : (
+            <p className="text-muted-foreground col-span-4 text-center">
+              No related products found
+            </p>
+          )}
         </div>
       </section>
     </div>

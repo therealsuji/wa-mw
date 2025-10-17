@@ -2,10 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Icons } from "@/lib/assets";
+import { useCartStore } from "@/lib/stores/cart-store";
 import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
@@ -16,7 +19,12 @@ interface ProductCardProps {
   description: string;
   imageUrl: string;
   featured?: boolean;
+  category?: string;
 }
+
+const isClothingCategory = (category?: string) => {
+  return category === "men's clothing" || category === "women's clothing";
+};
 
 export const ProductCard = ({
   id,
@@ -26,7 +34,37 @@ export const ProductCard = ({
   description,
   imageUrl,
   featured = false,
+  category,
 }: ProductCardProps) => {
+  const router = useRouter();
+  const addItem = useCartStore((state) => state.addItem);
+  const isClothing = isClothingCategory(category);
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // If clothing item, redirect to product page for size selection
+    if (isClothing) {
+      router.push(`/product/${id}`);
+      return;
+    }
+
+    // For non-clothing items, add directly to cart
+    addItem({
+      id,
+      title,
+      price,
+      imageUrl,
+      category: category ?? "",
+      qty: 1,
+    });
+
+    toast.success("Added to cart!", {
+      description: `1 × ${title}`,
+    });
+  };
+
   return (
     <Card
       className={cn(
@@ -65,9 +103,10 @@ export const ProductCard = ({
             variant={featured ? "default" : "secondary"}
             className="w-full cursor-pointer"
             size="lg"
+            onClick={handleAddToCart}
           >
             <Icons.plus className="mr-2 h-4 w-4" />
-            Add to Cart
+            {isClothing ? "Select Options" : "Add to Cart"}
           </Button>
         </div>
       </div>

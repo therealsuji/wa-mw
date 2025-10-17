@@ -49,6 +49,7 @@ export const MostPopular = () => {
               rating={product.rating.rate}
               description={product.description}
               imageUrl={product.image}
+              category={product.category}
               featured={false}
             />
           ))}

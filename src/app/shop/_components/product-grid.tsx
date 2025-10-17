@@ -19,6 +19,7 @@ export const ProductGrid = ({ products }: ProductGridProps) => {
             rating={product.rating.rate}
             description={product.description}
             imageUrl={product.image}
+            category={product.category}
           />
         ))}
     </div>

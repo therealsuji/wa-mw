@@ -10,7 +10,8 @@ export type CartItem = {
   title: string;
   price: number;
   imageUrl: string;
-  size: string;
+  category: string;
+  size?: string;
   qty: number;
 };
 
@@ -50,7 +51,9 @@ export const CartItemCard = ({
           <div className="mb-1 text-sm font-medium text-black">
             {item.title}
           </div>
-          <div className="text-muted-foreground text-xs">Size: {item.size}</div>
+          {item.size && (
+            <div className="text-muted-foreground text-xs">Size: {item.size}</div>
+          )}
           <div className="text-primary mt-2">${item.price.toFixed(2)}</div>
         </div>
 

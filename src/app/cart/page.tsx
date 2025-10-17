@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import Link from "next/link";
 
@@ -16,75 +16,32 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useRelatedProducts } from "@/lib/hooks/use-products";
+import { useCartStore } from "@/lib/stores/cart-store";
 
-import { type CartItem, CartItemCard } from "./_components/cart-item";
-
-const initialCart: CartItem[] = [
-  {
-    id: 1,
-    title: "Men's Cotton Jacket",
-    price: 95,
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    size: "Medium",
-    qty: 1,
-  },
-  {
-    id: 2,
-    title: "Urban Slim‑Fit Shirt",
-    price: 65,
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    size: "Small",
-    qty: 1,
-  },
-  {
-    id: 3,
-    title: "Classic Cotton Shorts",
-    price: 95,
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-    size: "Medium",
-    qty: 1,
-  },
-];
-
-const related = [
-  {
-    id: 4,
-    title: "Men's Cotton Jacket",
-    price: 95,
-    rating: 4.5,
-    description:
-      "A timeless layering essential made from durable yet lightweight cotton.",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-  },
-  {
-    id: 5,
-    title: "Sleeveless Blouse",
-    price: 40,
-    rating: 3.0,
-    description:
-      "A lightweight, breathable blouse designed for effortless style.",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-  },
-  {
-    id: 6,
-    title: "Classic Cotton Shorts",
-    price: 95,
-    rating: 4.5,
-    description: "Lightweight cotton shorts with a tailored fit.",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-  },
-  {
-    id: 7,
-    title: "Women's Jean Jacket",
-    price: 65,
-    rating: 4.5,
-    description: "Classic denim with a cropped cut for a modern twist.",
-    imageUrl: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png",
-  },
-];
+import { CartItemCard } from "./_components/cart-item";
 
 export default function CartPage() {
-  const [items, setItems] = useState<CartItem[]>(initialCart);
+  const items = useCartStore((state) => state.items);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const removeItem = useCartStore((state) => state.removeItem);
+
+  // unique categories in cart
+  const cartCategories = useMemo(() => {
+    const categories = items.map((item) => item.category);
+    return [...new Set(categories)];
+  }, [items]);
+
+  // cart items to exclude from related products
+  const cartItemIds = useMemo(() => {
+    return items.map((item) => item.id);
+  }, [items]);
+
+  const { data: relatedProducts = [] } = useRelatedProducts({
+    categories: cartCategories,
+    excludeIds: cartItemIds,
+    limit: 4,
+  });
 
   const totals = useMemo(() => {
     const subtotal = items.reduce((sum, i) => sum + i.price * i.qty, 0);
@@ -94,12 +51,12 @@ export default function CartPage() {
     return { subtotal, shipping, tax, grand };
   }, [items]);
 
-  const updateQty = (id: number, qty: number) => {
-    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, qty } : i)));
+  const handleQtyChange = (id: number, size: string | undefined, qty: number) => {
+    updateQuantity(id, size, qty);
   };
 
-  const removeItem = (id: number) => {
-    setItems((prev) => prev.filter((i) => i.id !== id));
+  const handleRemove = (id: number, size: string | undefined) => {
+    removeItem(id, size);
   };
 
   return (
@@ -124,14 +81,20 @@ export default function CartPage() {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_360px]">
         {/* Items */}
         <div className="space-y-4">
-          {items.map((item) => (
-            <CartItemCard
-              key={item.id}
-              item={item}
-              onQtyChange={updateQty}
-              onRemove={removeItem}
-            />
-          ))}
+          {items.length === 0 ? (
+            <div className="text-muted-foreground py-12 text-center">
+              Your cart is empty. Start shopping to add items!
+            </div>
+          ) : (
+            items.map((item) => (
+              <CartItemCard
+                key={`${item.id}-${item.size ?? "default"}`}
+                item={item}
+                onQtyChange={(id, qty) => handleQtyChange(id, item.size, qty)}
+                onRemove={(id) => handleRemove(id, item.size)}
+              />
+            ))
+          )}
         </div>
 
         {/* Summary */}
@@ -163,22 +126,25 @@ export default function CartPage() {
       </div>
 
       {/* Recommendations */}
-      <section className="mt-16">
-        <h2 className="mb-6 text-xl font-semibold">You May Also Like</h2>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {related.map((p) => (
-            <ProductCard
-              key={p.id}
-              id={p.id}
-              title={p.title}
-              price={p.price}
-              rating={p.rating}
-              description={p.description}
-              imageUrl={p.imageUrl}
-            />
-          ))}
-        </div>
-      </section>
+      {relatedProducts.length > 0 && (
+        <section className="mt-16">
+          <h2 className="mb-6 text-xl font-semibold">You May Also Like</h2>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {relatedProducts.map((p) => (
+              <ProductCard
+                key={p.id}
+                id={p.id}
+                title={p.title}
+                price={p.price}
+                rating={p.rating.rate}
+                description={p.description}
+                imageUrl={p.image}
+                category={p.category}
+              />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

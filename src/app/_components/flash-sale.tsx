@@ -49,6 +49,7 @@ export const FlashSale = () => {
               rating={product.rating.rate}
               description={product.description}
               imageUrl={product.image}
+              category={product.category}
               featured={index === 0}
             />
           ))}
