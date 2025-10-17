@@ -157,71 +157,68 @@ export default function ShopPage() {
   });
 
   return (
-    <div className="min-h-screen bg-background mt-20">
-      <div className="mx-auto max-w-7xl px-6 py-8">
-        {/* Breadcrumb */}
-        <Breadcrumb className="mb-8">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="/">Home</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Shop</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+    <div className="mx-auto max-w-7xl px-6 py-8">
+      {/* Breadcrumb */}
+      <Breadcrumb className="mb-8">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/">Home</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Shop</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
 
-        {/* Shop Header */}
-        <div className="mb-8">
-          <ShopHeader onSortChange={handleSortChange} />
-        </div>
+      {/* Shop Header */}
+      <div className="mb-8">
+        <ShopHeader onSortChange={handleSortChange} />
+      </div>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[250px_1fr]">
-          {/* Sidebar */}
-          <aside>
-            <CategoryFilter
-              selectedCategories={selectedCategories}
-              onCategoryChange={handleCategoryChange}
-            />
-          </aside>
+      {/* Main Content */}
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[250px_1fr]">
+        {/* Sidebar */}
+        <aside>
+          <CategoryFilter
+            selectedCategories={selectedCategories}
+            onCategoryChange={handleCategoryChange}
+          />
+        </aside>
 
-          {/* Product Grid */}
-          <div className="space-y-8">
-            <ProductGrid products={sortedProducts} />
+        {/* Product Grid */}
+        <div className="space-y-8">
+          <ProductGrid products={sortedProducts} />
 
-            {/* Pagination */}
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious href="#" />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#" isActive>
-                    1
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">2</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">3</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext href="#" />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
+          {/* Pagination */}
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href="#" />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#" isActive>
+                  1
+                </PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">2</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">3</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext href="#" />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
     </div>
   );
 }
-
