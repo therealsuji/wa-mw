@@ -32,8 +32,8 @@ export const Hero = () => {
             </div>
 
             <div className="flex min-h-[4rem] items-stretch">
-              <div className="flex flex-1 flex-col justify-center pr-8 text-left">
-                <div className="text-2xl font-bold text-black">200+</div>
+              <div className="flex flex-1 flex-col justify-center pr-4 md:pr-8 text-left">
+                <div className="text-lg md:text-2xl font-bold text-black">200+</div>
                 <div className="text-muted-foreground text-sm">
                   International Brands
                 </div>
@@ -41,8 +41,8 @@ export const Hero = () => {
               <div className="flex items-center">
                 <Separator orientation="vertical" />
               </div>
-              <div className="flex flex-1 flex-col justify-center px-8 text-left">
-                <div className="text-2xl font-bold text-black">2,000+</div>
+              <div className="flex flex-1 flex-col justify-center px-4 md:px-8 text-left">
+                <div className="text-lg md:text-2xl font-bold text-black">2,000+</div>
                 <div className="text-muted-foreground text-sm">
                   High-Quality Products
                 </div>
@@ -51,7 +51,7 @@ export const Hero = () => {
                 <Separator orientation="vertical" />
               </div>
               <div className="flex flex-1 flex-col justify-center pl-8 text-left">
-                <div className="text-2xl font-bold text-black">30,000+</div>
+                <div className="text-lg md:text-2xl font-bold text-black">30,000+</div>
                 <div className="text-muted-foreground text-sm">
                   Happy Customers
                 </div>

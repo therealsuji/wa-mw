@@ -1,29 +1,43 @@
-# Create T3 App
+# ModernWalk - E-commerce Application
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
-## What's next? How do I make an app with this?
+## Tech Stack
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- **Framework**: Next.js 15 with App Router
+- **Styling**: Tailwind CSS 4.0
+- **State Management**: Zustand
+- **Data Fetching**: TanStack Query
+- **UI Components**: Radix UI primitives
+- **Icons**: Lucide React
+- **Validation**: Zod
+- **Package Manager**: Bun
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## API Integration
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+The application integrates with the FakeStore API for product data:
 
-## Learn More
+- **Base URL**: `https://fakestoreapi.com`
+- **Endpoints**:
+  - `GET /products` - Fetch all products
+  - `GET /products/{id}` - Fetch product details
+  - `GET /products/categories` - Fetch product categories
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## Key Components
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+### Cart Management
+- Persistent cart storage using Zustand
+- Add/remove items with quantity management
+- Size-based item differentiation
+- Subtotal calculation
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+### Product Display
+- Product grid with responsive layout
+- Category filtering
+- Pagination support
+- Product detail pages with image galleries
 
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+### State Management
+- **Cart Store**: Manages shopping cart state
+- **Query Client**: Handles server state with TanStack Query
+- **Persistent Storage**: Cart data persists across sessions

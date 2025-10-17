@@ -18,10 +18,10 @@ const CartButton = () => {
   return (
     <Link
       href="/cart"
-      className="text-primary hover:text-muted-foreground flex items-center gap-2"
+      className="text-primary flex items-center gap-2 group"
     >
-      <Icons.cart />
-      {isMounted && itemCount > 0 && <span>{itemCount}</span>}
+      <Icons.cart className="text-primary group-hover:text-muted-foreground"/>
+      {isMounted && itemCount > 0 && <span className="group-hover:text-muted-foreground">{itemCount}</span>}
     </Link>
   );
 };

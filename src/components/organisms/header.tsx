@@ -20,19 +20,19 @@ export const Header = () => {
             Shop
           </Link>
           <Link
-            href="/brands"
+            href="/#"
             className="text-primary hover:text-muted-foreground"
           >
             Brands
           </Link>
           <Link
-            href="/about"
+            href="/#"
             className="text-primary hover:text-muted-foreground"
           >
             About
           </Link>
           <Link
-            href="/contact"
+            href="/#"
             className="text-primary hover:text-muted-foreground"
           >
             Contact

@@ -31,36 +31,36 @@ export const Footer = () => {
           </div>
 
           <div>
-            <h3 className="mb-4 font-semibold text-black">Company</h3>
+            <h3 className="mb-4 font-semibold text-primary">Company</h3>
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/about"
-                  className="text-sm text-black hover:text-gray-600"
+                  href="/#"
+                  className="text-sm text-muted-foreground hover:text-gray-600"
                 >
                   About
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/features"
-                  className="text-sm text-black hover:text-gray-600"
+                  href="/#"
+                  className="text-sm text-muted-foreground hover:text-gray-600"
                 >
                   Features
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/works"
-                  className="text-sm text-black hover:text-gray-600"
+                  href="/#"
+                  className="text-sm text-muted-foreground hover:text-gray-600"
                 >
                   Works
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/career"
-                  className="text-sm text-black hover:text-gray-600"
+                  href="/#"
+                  className="text-sm text-muted-foreground hover:text-gray-600"
                 >
                   Career
                 </Link>
@@ -73,8 +73,8 @@ export const Footer = () => {
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/account"
-                  className="text-sm text-black hover:text-gray-600"
+                  href="/#"
+                  className="text-sm text-muted-foreground hover:text-gray-600"
                 >
                   Account
                 </Link>
@@ -82,23 +82,23 @@ export const Footer = () => {
               <li>
                 <Link
                   href="/cart"
-                  className="text-sm text-black hover:text-gray-600"
+                  className="text-sm text-muted-foreground hover:text-gray-600"
                 >
                   Cart
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/orders"
-                  className="text-sm text-black hover:text-gray-600"
+                  href="/#"
+                  className="text-sm text-muted-foreground hover:text-gray-600"
                 >
                   Orders
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/payments"
-                  className="text-sm text-black hover:text-gray-600"
+                  href="/#"
+                  className="text-sm text-muted-foreground hover:text-gray-600"
                 >
                   Payments
                 </Link>
@@ -107,36 +107,36 @@ export const Footer = () => {
           </div>
 
           <div>
-            <h3 className="mb-4 font-semibold text-black">Help</h3>
+            <h3 className="mb-4 font-semibold text-primary">Help</h3>
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/support"
-                  className="text-sm text-black hover:text-gray-600"
+                  href="/#"
+                  className="text-sm text-muted-foreground hover:text-gray-600"
                 >
                   Customer Support
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/delivery"
-                  className="text-sm text-black hover:text-gray-600"
+                  href="/#"
+                  className="text-sm text-muted-foreground hover:text-gray-600"
                 >
                   Delivery Details
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/terms"
-                  className="text-sm text-black hover:text-gray-600"
+                  href="/#"
+                  className="text-sm text-muted-foreground hover:text-gray-600"
                 >
                   Terms & Conditions
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/privacy"
-                  className="text-sm text-black hover:text-gray-600"
+                  href="/#"
+                  className="text-sm text-muted-foreground hover:text-gray-600"
                 >
                   Privacy Policy
                 </Link>
